@@ -68,13 +68,13 @@ Now, we want to analyze whether or not the choice of top and bottom people wear 
 ggplot(data = latest_data) + 
   geom_bar(aes(x = weather_condition, fill = top)) + 
   labs(title = "Top vs Weather",
-       subtitle = "Does weather condition affect what type of top people wear?",
+       subtitle = "Distribution of different types of tops across different weather conditions",
        x = "Weather Condition", y = "Number of People", fill = "Type of Top")
 
 ggplot(data = latest_data) + 
   geom_bar(aes(x = weather_condition, fill = bottoms)) + 
   labs(title = "Bottoms vs Weather",
-       subtitle = "Does weather condition affect what type of bottoms people wear?",
+       subtitle = "Distribution of different types of bottoms across different weather conditions",
        x = "Weather Condition", y = "Number of People", fill = "Type of Bottoms")
 ```
 ```{r}
