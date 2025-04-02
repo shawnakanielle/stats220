@@ -1,0 +1,106 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+library(tidyverse)
+
+```
+
+```{css}
+p {
+  font-size: 18px;
+}
+
+ul {
+  font-size: 18px;
+}
+```
+
+## How does weather affect the way people dress in Auckland summer?
+
+This report explores how weather affects the way people dress during summer in Auckland.
+```{r}
+# Read in the csv
+logged_data = read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vSSeFkvIdq5IIr3XsfoJmiWYUCGgIo4xEUyZSIOZf8OZvf7CiRMnfSFZxr8mHPUTguHEgO-yz-zLU0v/pub?output=csv")
+
+# Rename the columns
+# Remove first row because I do not want to use the time stamp
+latest_data = rename(logged_data[-1], temperature_celsius = 1, time_of_day = 2, weather_condition = 3, top = 4, bottoms = 5, sex = 6)
+```
+
+
+```{r}
+# Finding number of observations
+n_observation = nrow(latest_data)
+
+# Finding mean and range of temperature
+mean_temperature = mean(latest_data$temperature_celsius)
+range_temperature = range(latest_data$temperature_celsius)
+
+# Finding count of each type of top and bottoms
+longsleeves_count = sum(latest_data$top == "Long sleeves")
+shortsleeves_count = sum(latest_data$top == "Short sleeves")
+sleeveless_count = sum(latest_data$top == "Sleeveless")
+
+below_count = sum(latest_data$bottoms == "Below the knees")
+around_count = sum(latest_data$bottoms == "Around the knees")
+above_count = sum(latest_data$bottoms == "Above the knees")
+
+```
+
+A Google form has been designed to collect data about people's clothing behaviour in Auckland. We have `r n_observation` observations and from those, we see that when the average temperature is `r round(mean_temperature, 2)`°C:
+
+* `r longsleeves_count` people are wearing a long-sleeved top.
+* `r shortsleeves_count` people are wearing a short-sleeved top.
+* `r sleeveless_count` people are wearing a sleeveless top.
+* `r below_count` people are wearing bottoms that reach below the knees.
+* `r around_count` people are wearing bottoms that reach around the knees.
+* `r above_count` people are wearing bottoms that reach above the knees.
+
+Now, we want to analyze whether or not the choice of top and bottom people wear is affected by the weather. Since our range  of temperature is quite low (highest temperature is `r range_temperature[2]`°C and lowest temperature is `r range_temperature[1]`°C), it is hard to decide whether the difference in clothing behaviour is really due to the temperature, or simply due to chance. Thus, instead of temperature, we have decided to compare how people dress based on the weather condition (sunny, cloudy, rainy or other). Observe the following bar charts:
+
+```{r}
+ggplot(data = latest_data) + 
+  geom_bar(aes(x = weather_condition, fill = top)) + 
+  labs(title = "Top vs Weather",
+       subtitle = "Does weather condition affect what type of top people wear?",
+       x = "Weather Condition", y = "Number of People", fill = "Type of Top")
+
+ggplot(data = latest_data) + 
+  geom_bar(aes(x = weather_condition, fill = bottoms)) + 
+  labs(title = "Bottoms vs Weather",
+       subtitle = "Does weather condition affect what type of bottoms people wear?",
+       x = "Weather Condition", y = "Number of People", fill = "Type of Bottoms")
+```
+```{r}
+sunny_data = latest_data[latest_data$weather_condition == "Sunny", ]
+cloudy_data = latest_data[latest_data$weather_condition == "Cloudy", ]
+rainy_data = latest_data[latest_data$weather_condition == "Rainy", ]
+other_data = latest_data[latest_data$weather_condition == "Other", ]
+
+sunny_max_top = tolower(names(which.max(table(sunny_data$top))))
+sunny_max_bottoms = tolower(names(which.max(table(sunny_data$bottoms))))
+
+cloudy_max_top = tolower(names(which.max(table(cloudy_data$top))))
+cloudy_max_bottoms = tolower(names(which.max(table(cloudy_data$bottoms))))
+
+rainy_max_top = tolower(names(which.max(table(rainy_data$top))))
+rainy_max_bottoms = tolower(names(which.max(table(rainy_data$bottoms))))
+
+other_max_top = tolower(names(which.max(table(other_data$top))))
+other_max_bottoms = tolower(names(which.max(table(other_data$bottoms))))
+
+```
+
+Based on the bar charts and the data we have collected, some conclusions we can draw is:
+
+* On **sunny days**, most people wear a top with **`r sunny_max_top`** and bottoms that reach **`r sunny_max_bottoms`**.
+* On **cloudy days**, most people wear a top with **`r cloudy_max_top`** and bottoms that reach **`r cloudy_max_bottoms`**.
+* On **rainy days**, most people wear a top with **`r rainy_max_top`** and bottoms that reach **`r rainy_max_bottoms`**.
+* On other days, most people wear a top with **`r other_max_top`** and bottoms that reach **`r other_max_bottoms`**.
+
+Note that for now, we are ignoring the variables _'sex'_ and _'time_of_day'_ since we are focusing on how weather conditions affect the way people dress. These variables (along with _'temperature_celsius'_) will be used in the future when we want a more detailed analysis to account for chance variation.
+       
