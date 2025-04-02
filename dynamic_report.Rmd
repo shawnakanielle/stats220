@@ -60,7 +60,7 @@ A Google form has been designed to collect data about people's clothing behaviou
 * `r around_count` people are wearing bottoms that reach around the knees.
 * `r above_count` people are wearing bottoms that reach above the knees.
 
-For now, we are ignoring people who are wearing 'other' types of top and/or bottoms.
+For this report, we are ignoring people who are wearing 'other' types of top and/or bottoms.
 
 Now, we want to analyze whether or not the choice of top and bottom people wear is affected by the weather. Since our range  of temperature is quite low (highest temperature is `r range_temperature[2]`°C and lowest temperature is `r range_temperature[1]`°C), it is hard to decide whether the difference in clothing behaviour is really due to the temperature, or simply due to chance. Thus, instead of temperature, we have decided to compare how people dress based on the weather condition (sunny, cloudy, rainy or other). Observe the following bar charts:
 
