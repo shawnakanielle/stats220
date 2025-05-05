@@ -5,8 +5,8 @@
 _A little about me_:
 
 - I am undertaking a degree in **data science**.
-- I am taking STATS 220 because it is a **required course**.
-- I am interested in learning about **data technologies**.
+- I am taking STATS 220 because **I love DATA!!**
+- I am interested in learning about using **data technologies** to **effectively communicate** my analytical findings.
 
 _My favourite songs:_
 
